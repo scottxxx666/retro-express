@@ -25,6 +25,8 @@
   "dependencies": {
     "bottlejs": "^1.7.2",
     "express": "^4.17.1",
+    "express-jwt": "^5.3.1",
+    "jsonwebtoken": "^8.5.1",
     "npm": "^6.11.3"
   }
 }
