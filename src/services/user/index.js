@@ -3,8 +3,11 @@ export default class UserService {
     this.userRepo = userRepo;
     this.jwt = jwt;
   }
-  login(openId) {
-    const member = this.userRepo.find(openId);
-    return this.jwt.sign({member});
+  async login(openId, platform) {
+    const id = await this.userRepo.getId(platform, openId);
+    if (id === null) {
+      return await this.userRepo.create(platform, openId, 'uid');
+    }
+    return this.jwt.sign({id});
   }
 }
