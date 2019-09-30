@@ -1,13 +1,16 @@
+import uuid from 'uuid/v4';
+
 export default class UserService {
   constructor(userRepo, jwt) {
     this.userRepo = userRepo;
     this.jwt = jwt;
   }
+
   async login(openId, platform) {
-    const id = await this.userRepo.getId(platform, openId);
+    let id = await this.userRepo.getId(platform, openId);
     if (id === null) {
-      return await this.userRepo.create(platform, openId, 'uid');
+      id = await this.userRepo.create(platform, openId, uuid());
     }
-    return this.jwt.sign({id});
+    return this.jwt.sign({ id });
   }
 }
