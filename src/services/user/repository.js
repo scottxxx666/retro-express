@@ -5,14 +5,13 @@ export default class Repository {
   async getId(platform, openId) {
     const params = {
       TableName: 'retrospectives',
-      KeyConditionExpression: 'pk = :openId and sk = :platform',
-      ExpressionAttributeValues: {
-        ':openId': openId,
-        ':platform': platform,
-      },
+      Key: {
+        'pk': openId,
+        'sk': platform,
+      }
     };
-    const data= await this.docClient.query(params).promise();
-    return data.Count === 0 ? null : data.Items[0].pk;
+    const data = await this.docClient.get(params).promise();
+    return data.hasOwnProperty('Item') ? data.Item : null;
   }
   async create(platform, openId, id) {
     const params = {
