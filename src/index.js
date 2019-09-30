@@ -1,12 +1,12 @@
 import express from 'express';
 import routes from './routes';
 import container from './container';
-import auth from './middlewares/auth.js';
+import auth from './middlewares/auth';
 
 const app = express();
 const port = 3000;
 
-app.use(auth.unless({path: ['/users/login']}));
+app.use(auth.unless({ path: ['/users/login'] }));
 app.use(container);
 app.use(routes);
 
