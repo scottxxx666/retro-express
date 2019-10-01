@@ -1,4 +1,4 @@
-import uuid from 'uuid/v4';
+import uuid from '../../utils/uuid';
 
 export default class UserService {
   constructor(userRepo, jwt) {
