@@ -15,16 +15,18 @@
   "devDependencies": {
     "@babel/cli": "^7.6.2",
     "@babel/core": "^7.6.2",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
     "babel-core": "^6.26.3",
-    "eslint": "^6.4.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "nodemon": "^1.19.2"
   },
   "dependencies": {
-    "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/runtime": "^7.6.2",
     "aws-sdk": "^2.538.0",
     "bottlejs": "^1.7.2",
     "express": "^4.17.1",
