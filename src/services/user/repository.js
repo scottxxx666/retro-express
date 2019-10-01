@@ -7,7 +7,7 @@ export default class Repository {
     const params = {
       TableName: 'retrospectives',
       Key: {
-        'pk': openId,
+        'pk': 'OPEN-ID-' + openId,
         'sk': platform,
       }
     };
@@ -19,7 +19,7 @@ export default class Repository {
     const params = {
       TableName: 'retrospectives',
       Item: {
-        'pk': openId,
+        'pk': 'OPEN-ID-' + openId,
         'sk': platform,
         'userId': id,
       }
