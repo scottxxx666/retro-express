@@ -1,15 +1,15 @@
 import uuid from '../../utils/uuid';
 
-export default class UserService {
+export default class Service {
   constructor(userRepo, jwt) {
-    this.userRepo = userRepo;
+    this.repo = userRepo;
     this.jwt = jwt;
   }
 
   async login(openId, platform) {
-    let id = await this.userRepo.getId(platform, openId);
+    let id = await this.repo.getId(platform, openId);
     if (id === null) {
-      id = await this.userRepo.create(platform, openId, uuid());
+      id = await this.repo.create(platform, openId, uuid());
     }
     return this.jwt.sign({ id });
   }

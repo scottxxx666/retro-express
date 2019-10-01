@@ -1,30 +1,33 @@
 export default class Repository {
+  _tableName = 'retrospectives';
+  _pkPrefix = 'OPEN-ID-';
+
   constructor(documentClient) {
-    this.docClient = documentClient;
+    this._client = documentClient;
   }
 
   async getId(platform, openId) {
     const params = {
-      TableName: 'retrospectives',
+      TableName: this._tableName,
       Key: {
-        'pk': 'OPEN-ID-' + openId,
+        'pk': this._pkPrefix + openId,
         'sk': platform,
       }
     };
-    const data = await this.docClient.get(params).promise();
+    const data = await this._client.get(params).promise();
     return data.hasOwnProperty('Item') ? data.Item : null;
   }
 
   async create(platform, openId, id) {
     const params = {
-      TableName: 'retrospectives',
+      TableName: this._tableName,
       Item: {
-        'pk': 'OPEN-ID-' + openId,
+        'pk': this._pkPrefix + openId,
         'sk': platform,
         'userId': id,
       }
     };
-    await this.docClient.put(params).promise();
+    await this._client.put(params).promise();
     return id;
   }
 }
