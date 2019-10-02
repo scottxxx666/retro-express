@@ -10,4 +10,9 @@ export default class Service {
     await this._repo.create(userId, id);
     return { id };
   }
+
+  async find(roomId) {
+    const data = this._repo.find(roomId);
+    return data;
+  }
 }
