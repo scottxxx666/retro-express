@@ -15,7 +15,7 @@ export default class Repository {
       }
     };
     const data = await this._client.get(params).promise();
-    return data.hasOwnProperty('Item') ? data.Item : null;
+    return data.hasOwnProperty('Item') ? data.Item.pk : null;
   }
 
   async create(platform, openId, id) {
