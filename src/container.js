@@ -4,11 +4,11 @@ import RoomRepository from './services/room/repository';
 import UserService from './services/user';
 import RoomService from './services/room';
 import JwtService from './services/jwt';
-import AWS from './aws';
+import docClient from './utils/client';
 
 export default function (req, res, next) {
   const bottle = new Bottle();
-  bottle.service('docClient', AWS.DynamoDB.DocumentClient);
+  bottle.service('docClient', docClient);
   bottle.factory('userRepo', (container) => new UserRepository(container.docClient));
   bottle.factory('roomRepo', (container) => new RoomRepository(container.docClient));
   bottle.service('jwtService', JwtService);

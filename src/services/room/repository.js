@@ -42,7 +42,7 @@ export default class Repository {
         ':hostPrefix': this._hostPrefix
       }
     };
-    const { columns, status } = (await this._client.query(params).promise()).Items[0];
+    const { columns, status } = await this._client.find(params);
     return { columns, status };
   }
 }
