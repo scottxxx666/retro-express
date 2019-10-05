@@ -3,7 +3,7 @@ import dynamoose from 'dynamoose';
 export default dynamoose.model('retrospectives', new dynamoose.Schema({
   // Open id, prefix: OPEN-ID
   pk: {
-    type:String,
+    type: String,
     hashKey: true,
   },
   // Platform

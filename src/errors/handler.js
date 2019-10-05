@@ -2,6 +2,6 @@ export default function errorHandler(err, req, res, next) {
   if (res.headersSent) {
     return next(err);
   }
-  const { message } = err;
-  return res.status(err.status).json({ message });
+  const { status = 500, message = 'Something is wrong!' } = err;
+  return res.status(status).json({ message });
 }
