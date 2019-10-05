@@ -25,7 +25,7 @@ export default class Repository {
             pk: this._pkPrefix + roomId,
             sk: this._hostPrefix + userId,
             status: 'READY',
-            columns: ['Went well', 'To Improve', 'Action Items']
+            stages: ['Went well', 'To Improve', 'Action Items']
           }
         }
       }]
@@ -42,7 +42,7 @@ export default class Repository {
         ':hostPrefix': this._hostPrefix
       }
     };
-    const { columns, status } = await this._client.find(params);
-    return { columns, status };
+    const { stages, status } = await this._client.list(params);
+    return { stages, status };
   }
 }
