@@ -10,7 +10,7 @@ export default class Repository {
   }
 
   async create(platform, openId, id) {
-    await OpenId.create({ pk: this._pkPrefix + openId, sk: platform });
+    await OpenId.create({ pk: this._pkPrefix + openId, sk: platform, userId: id });
     return id;
   }
 }
