@@ -14,7 +14,7 @@ export default class Repository {
           TableName: this._tableName,
           Item: {
             pk: this._hostPrefix + userId,
-            sk: 'CREATED-AT-' + new Date().toString(),
+            sk: 'CREATED-AT-' + new Date().toISOString(),
             room: roomId,
           }
         }
@@ -24,7 +24,7 @@ export default class Repository {
           Item: {
             pk: this._pkPrefix + roomId,
             sk: this._hostPrefix + userId,
-            status: 'READY',
+            currentStage: 0,
             stages: ['Went well', 'To Improve', 'Action Items']
           }
         }
@@ -42,7 +42,7 @@ export default class Repository {
         ':hostPrefix': this._hostPrefix
       }
     };
-    const { stages, status } = await this._client.list(params);
-    return { stages, status };
+    const { stages, currentStage } = await this._client.find(params);
+    return { stages, currentStage };
   }
 }

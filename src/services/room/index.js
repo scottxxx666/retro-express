@@ -12,7 +12,6 @@ export default class Service {
   }
 
   async find(roomId) {
-    const data = this._repo.find(roomId);
-    return data;
+    return await this._repo.find(roomId);
   }
 }
