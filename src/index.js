@@ -13,4 +13,4 @@ app.use(container);
 app.use(routes);
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`App listening on port ${port}!`));
+app.listen(port);
