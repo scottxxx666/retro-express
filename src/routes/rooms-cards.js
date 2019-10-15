@@ -11,4 +11,15 @@ router.post('/rooms/:roomId/cards', asyncWrap(async (req, res) => {
   res.json({ data });
 }));
 
+router.post('/rooms/:roomId/cards/:cardId', asyncWrap(async (req, res) => {
+  const data = await req.container.cardService.vote(
+    req.params.roomId,
+    req.body.stageId,
+    req.params.cardId,
+    req.auth.data.id,
+    req.body.action,
+  );
+  res.json({ data });
+}));
+
 export default router;
