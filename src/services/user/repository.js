@@ -1,6 +1,6 @@
 export default class Repository {
-  _tableName = 'retrospectives';
-  _pkPrefix = 'OPEN-ID-';
+  _tableName = 'Retrospectives';
+  _pkPrefix = 'OpenId_';
 
   constructor(documentClient) {
     this._client = documentClient;

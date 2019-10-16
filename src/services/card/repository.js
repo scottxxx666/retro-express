@@ -1,8 +1,10 @@
 export default class Repository {
-  _tableName = 'retrospectives';
-  _roomPrefix = 'ROOM-';
-  _stagePrefix = 'STAGE-';
-  _cardPrefix = 'CARD-';
+  _tableName = 'Retrospectives';
+  _roomPrefix = 'Room_';
+  _stagePrefix = 'Stage_';
+  _cardPrefix = 'Card_'
+  _userPrefix = 'User_';
+  _likePostfix = 'Like';
 
   constructor(documentClient) {
     this._client = documentClient;
@@ -14,7 +16,7 @@ export default class Repository {
       KeyConditionExpression: 'pk = :roomId and begins_with(sk, :stageId)',
       ExpressionAttributeValues: {
         ':roomId': this._roomPrefix + roomId,
-        ':stageId': this._stagePrefix + stageId + '#' + this._cardPrefix,
+        ':stageId': `${this._stagePrefix + stageId}#${this._cardPrefix}`,
       }
     };
     return await this._client.query(params).promise();
@@ -25,7 +27,7 @@ export default class Repository {
       TableName: this._tableName,
       Item: {
         pk: this._roomPrefix + roomId,
-        sk: this._stagePrefix + stageId + '#' + this._cardPrefix + id,
+        sk: `${this._stagePrefix + stageId}#${this._cardPrefix}${id}`,
         userId: userId,
         content: content,
         likes: 0,
@@ -44,7 +46,7 @@ export default class Repository {
             TableName: this._tableName,
             Key: {
               pk: this._roomPrefix + roomId,
-              sk: this._stagePrefix + stageId + '#' + this._cardPrefix + cardId,
+              sk: `${this._stagePrefix + stageId}#${this._cardPrefix}${cardId}`,
             },
             UpdateExpression: 'set likes = likes + :val',
             ExpressionAttributeValues: {
@@ -55,7 +57,7 @@ export default class Repository {
           Put: {
             TableName: this._tableName,
             Item: {
-              pk: this._roomPrefix + roomId + '#' + this._stagePrefix + stageId + '#USER-' + userId + '#LIKE',
+              pk: `${this._roomPrefix + roomId}#${this._stagePrefix}${stageId}#${this._userPrefix}${userId}#${this._likePostfix}`,
               sk: this._cardPrefix + cardId,
             }
           }
@@ -67,29 +69,32 @@ export default class Repository {
 
   async unlike(roomId, stageId, cardId, userId) {
     const params = {
-      TransactItems: [
-        {
-          Update: {
-            TableName: this._tableName,
-            Key: {
-              pk: this._roomPrefix + roomId,
-              sk: this._stagePrefix + stageId + '#' + this._cardPrefix + cardId,
-            },
-            UpdateExpression: 'set likes = likes + :val',
-            ExpressionAttributeValues: {
-              ':val': -1
-            },
-          }
-        }, {
-          Delete: {
-            TableName: this._tableName,
-            Key: {
-              pk: this._roomPrefix + roomId + '#' + this._stagePrefix + stageId + '#USER-' + userId + '#LIKE',
-              sk: this._cardPrefix + cardId,
+        TransactItems: [
+          {
+            Update: {
+              TableName: this._tableName,
+              Key: {
+                pk: this._roomPrefix + roomId,
+                sk: `${this._stagePrefix + stageId}#${this._cardPrefix}${cardId}`,
+              },
+              UpdateExpression: 'set likes = likes + :val',
+              ExpressionAttributeValues: {
+                ':val': -1
+              },
+            }
+          }, {
+            Delete: {
+              TableName: this._tableName,
+              Key: {
+                pk: `${this._roomPrefix + roomId}#${this._stagePrefix}${stageId}#${this._userPrefix}${userId}#${this._likePostfix}`,
+                sk:
+                  this._cardPrefix + cardId,
+              }
             }
           }
-        }]
-    };
+        ]
+      }
+    ;
     return await this._client.transactWrite(params).promise();
   }
 
@@ -98,7 +103,7 @@ export default class Repository {
       TableName: this._tableName,
       KeyConditionExpression: 'pk = :pk and sk = :sk',
       ExpressionAttributeValues: {
-        ':pk': this._roomPrefix + roomId + '#' + this._stagePrefix + stageId + '#USER-' + userId + '#LIKE',
+        ':pk': `${this._roomPrefix + roomId}#${this._stagePrefix}${stageId}#${this._userPrefix}${userId}#${this._likePostfix}`,
         ':sk': this._cardPrefix + cardId,
       }
     };

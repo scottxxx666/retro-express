@@ -1,7 +1,7 @@
 export default class Repository {
-  _tableName = 'retrospectives';
-  _pkPrefix = 'ROOM-';
-  _hostPrefix = 'HOST-';
+  _tableName = 'Retrospectives';
+  _pkPrefix = 'Room_';
+  _hostPrefix = 'Host_';
 
   constructor(documentClient) {
     this._client = documentClient;
@@ -14,7 +14,7 @@ export default class Repository {
           TableName: this._tableName,
           Item: {
             pk: this._hostPrefix + userId,
-            sk: 'CREATED-AT-' + new Date().toISOString(),
+            sk: 'CreatedAt_' + new Date().toISOString(),
             room: roomId,
           }
         }
