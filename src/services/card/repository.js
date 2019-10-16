@@ -1,7 +1,7 @@
 export default class Repository {
   _tableName = 'retrospectives';
-  _pkPrefix = 'ROOM-';
-  _skPrefix = 'STAGE-';
+  _roomPrefix = 'ROOM-';
+  _stagePrefix = 'STAGE-';
   _cardPrefix = 'CARD-';
 
   constructor(documentClient) {
@@ -13,8 +13,8 @@ export default class Repository {
       TableName: this._tableName,
       KeyConditionExpression: 'pk = :roomId and begins_with(sk, :stageId)',
       ExpressionAttributeValues: {
-        ':roomId': this._pkPrefix + roomId,
-        ':stageId': this._skPrefix + stageId + '-' + this._cardPrefix,
+        ':roomId': this._roomPrefix + roomId,
+        ':stageId': this._stagePrefix + stageId + '#' + this._cardPrefix,
       }
     };
     return await this._client.query(params).promise();
@@ -24,8 +24,8 @@ export default class Repository {
     const params = {
       TableName: this._tableName,
       Item: {
-        pk: this._pkPrefix + roomId,
-        sk: this._skPrefix + stageId + '-' + this._cardPrefix + id,
+        pk: this._roomPrefix + roomId,
+        sk: this._stagePrefix + stageId + '#' + this._cardPrefix + id,
         userId: userId,
         content: content,
         likes: 0,
@@ -43,8 +43,8 @@ export default class Repository {
           Update: {
             TableName: this._tableName,
             Key: {
-              pk: this._pkPrefix + roomId,
-              sk: this._skPrefix + stageId + '-' + this._cardPrefix + cardId,
+              pk: this._roomPrefix + roomId,
+              sk: this._stagePrefix + stageId + '#' + this._cardPrefix + cardId,
             },
             UpdateExpression: 'set likes = likes + :val',
             ExpressionAttributeValues: {
@@ -55,7 +55,7 @@ export default class Repository {
           Put: {
             TableName: this._tableName,
             Item: {
-              pk: this._pkPrefix + roomId + '-' + this._skPrefix + stageId + '-USER-' + userId + '-LIKE',
+              pk: this._roomPrefix + roomId + '#' + this._stagePrefix + stageId + '#USER-' + userId + '#LIKE',
               sk: this._cardPrefix + cardId,
             }
           }
@@ -72,8 +72,8 @@ export default class Repository {
           Update: {
             TableName: this._tableName,
             Key: {
-              pk: this._pkPrefix + roomId,
-              sk: this._skPrefix + stageId + '-' + this._cardPrefix + cardId,
+              pk: this._roomPrefix + roomId,
+              sk: this._stagePrefix + stageId + '#' + this._cardPrefix + cardId,
             },
             UpdateExpression: 'set likes = likes + :val',
             ExpressionAttributeValues: {
@@ -84,7 +84,7 @@ export default class Repository {
           Delete: {
             TableName: this._tableName,
             Key: {
-              pk: this._pkPrefix + roomId + '-' + this._skPrefix + stageId + '-USER-' + userId + '-LIKE',
+              pk: this._roomPrefix + roomId + '#' + this._stagePrefix + stageId + '#USER-' + userId + '#LIKE',
               sk: this._cardPrefix + cardId,
             }
           }
@@ -98,7 +98,7 @@ export default class Repository {
       TableName: this._tableName,
       KeyConditionExpression: 'pk = :pk and sk = :sk',
       ExpressionAttributeValues: {
-        ':pk': this._pkPrefix + roomId + '-' + this._skPrefix + stageId + '-USER-' + userId + '-LIKE',
+        ':pk': this._roomPrefix + roomId + '#' + this._stagePrefix + stageId + '#USER-' + userId + '#LIKE',
         ':sk': this._cardPrefix + cardId,
       }
     };
