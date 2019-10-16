@@ -26,6 +26,9 @@ export default class Service {
     if (await this._repo.alreadyVote(roomId, stageId, cardId, userId)) {
       return false;
     }
+    if (await this._repo.countVote(roomId, stageId, userId) >= 3) {
+      return false;
+    }
     return await this._repo.like(roomId, stageId, cardId, userId);
   }
 

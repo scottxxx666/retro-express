@@ -2,7 +2,7 @@ export default class Repository {
   _tableName = 'Retrospectives';
   _roomPrefix = 'Room_';
   _stagePrefix = 'Stage_';
-  _cardPrefix = 'Card_'
+  _cardPrefix = 'Card_';
   _userPrefix = 'User_';
   _likePostfix = 'Like';
 
@@ -109,5 +109,17 @@ export default class Repository {
     };
     const result = await this._client.query(params).promise();
     return result.Count >= 1;
+  }
+
+  async countVote(roomId, stageId, userId) {
+    const params = {
+      TableName: this._tableName,
+      KeyConditionExpression: 'pk = :pk and begins_with(sk, :skPrefix)',
+      ExpressionAttributeValues: {
+        ':pk': `${this._roomPrefix + roomId}#${this._stagePrefix}${stageId}#${this._userPrefix}${userId}#${this._likePostfix}`,
+        ':skPrefix': this._cardPrefix,
+      }
+    };
+    return (await this._client.query(params).promise()).Count;
   }
 }
