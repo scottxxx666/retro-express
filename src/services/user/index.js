@@ -6,7 +6,7 @@ export default class Service {
     this.jwt = jwt;
   }
 
-  async login(openId, platform) {
+  async login(platform, openId) {
     let id = await this.repo.getId(platform, openId);
     if (id === null) {
       id = await this.repo.create(platform, openId, uuid());
