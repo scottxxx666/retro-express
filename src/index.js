@@ -1,4 +1,5 @@
 import express from 'express';
+import helmet from 'helmet';
 import routes from './routes';
 import container from './container';
 import auth from './middlewares/auth';
@@ -7,6 +8,7 @@ import errorHandler from './errors/handler';
 const app = express();
 const port = 3000;
 
+app.use(helmet());
 app.use(express.json());
 app.use(auth.unless({ path: ['/users/login'] }));
 app.use(container);
