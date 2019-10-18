@@ -6,12 +6,12 @@ jest.mock('./repository');
 let service;
 let fakeRepo;
 
-describe('list', () => {
-  beforeEach(() => {
-    fakeRepo = new Repository;
-    service = new Service(fakeRepo);
-  });
+beforeEach(() => {
+  fakeRepo = new Repository;
+  service = new Service(fakeRepo);
+});
 
+describe('list', () => {
   test('Given room id and stage id Should return cards and counts', async () => {
     fakeRepo.list.mockReturnValue({ Items: 'cards', Count: 0 });
     expect(await service.list('room-id', 'stage-id')).toStrictEqual({ data: 'cards', count: 0 });
@@ -20,11 +20,6 @@ describe('list', () => {
 });
 
 describe('create', () => {
-  beforeEach(() => {
-    fakeRepo = new Repository;
-    service = new Service(fakeRepo);
-  });
-
   test('Should return new card id', async () => {
     expect(await service.create()).toEqual(expect.objectContaining({ id: expect.any(String) }));
   });
