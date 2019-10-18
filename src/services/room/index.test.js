@@ -33,7 +33,6 @@ describe('create', () => {
   beforeEach(() => {
     fakeRepo = new Repository();
     service = new Service(fakeRepo);
-    uuid
   });
 
   test('Give user id Should return new room id', async () => {
