@@ -17,12 +17,12 @@ export default class Service {
   }
 
   async vote(roomId, stageId, cardId, userId, action) {
-    const map = { 'LIKE': 'like', 'UNLIKE': 'unlike' };
+    const map = { 'LIKE': '_like', 'UNLIKE': '_unlike' };
     await this[map[action]](roomId, stageId, cardId, userId);
     return true;
   }
 
-  async like(roomId, stageId, cardId, userId) {
+  async _like(roomId, stageId, cardId, userId) {
     if (await this._repo.alreadyVote(roomId, stageId, cardId, userId)) {
       return false;
     }
@@ -32,7 +32,7 @@ export default class Service {
     return await this._repo.like(roomId, stageId, cardId, userId);
   }
 
-  async unlike(roomId, stageId, cardId, userId) {
+  async _unlike(roomId, stageId, cardId, userId) {
     if (!await this._repo.alreadyVote(roomId, stageId, cardId, userId)) {
       return false;
     }
