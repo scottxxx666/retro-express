@@ -1,5 +1,6 @@
 import Service from './index';
 import Repository from './repository';
+import TimesLimitExceededError from '../../errors/times-limited-exceeded';
 
 jest.mock('./repository');
 
@@ -29,33 +30,39 @@ describe('create', () => {
     expect(fakeRepo.create).toHaveBeenCalledWith('room-id', 'stage-id', expect.any(String), 'user-id', 'content');
   });
 
-  describe('_like', () => {
+  describe('vote like', () => {
     test('Need room-id, stage-id, card-id, user-id to like card', async () => {
-      await service._like('room-id', 'stage-id', 'card-id', 'user-id');
+      await service.vote('room-id', 'stage-id', 'card-id', 'user-id', 'LIKE');
       expect(fakeRepo.like).toHaveBeenCalledWith('room-id', 'stage-id', 'card-id', 'user-id');
     });
 
-    test('If user already liked this card Should return false', async () => {
+    test('If user already liked this card Should not like and return true', async () => {
       fakeRepo.alreadyVote.mockReturnValue(true);
-      expect(await service._like()).toBe(false);
+      const result = await service.vote('room-id', 'stage-id', 'card-id', 'user-id', 'LIKE');
+      expect(fakeRepo.like).not.toHaveBeenCalled();
+      expect(result).toBe(true);
     });
 
-    test('If user already voted 3 times Should return false', async () => {
+    test('If user already voted 3 times Should not like and throw Violet', async () => {
       fakeRepo.countVote.mockReturnValue(3);
-      expect(await service._like()).toBe(false);
+      await expect(service.vote('room-id', 'stage-id', 'card-id', 'user-id', 'LIKE'))
+        .rejects.toStrictEqual(new TimesLimitExceededError());
+
     });
   });
 
   describe('_unlike', () => {
     test('Need room-id, stage-id, card-id, user-id to unlike card', async () => {
       fakeRepo.alreadyVote.mockReturnValue(true);
-      await service._unlike('room-id', 'stage-id', 'card-id', 'user-id');
+      await service.vote('room-id', 'stage-id', 'card-id', 'user-id', 'UNLIKE');
       expect(fakeRepo.unlike).toHaveBeenCalledWith('room-id', 'stage-id', 'card-id', 'user-id');
     });
 
-    test('If user already unliked or not like this card Should return false', async () => {
+    test('If user already unliked or not like this card Should not unlike and return true', async () => {
       fakeRepo.alreadyVote.mockReturnValue(false);
-      expect(await service._unlike()).toBe(false);
+      expect(fakeRepo.unlike).not.toHaveBeenCalled();
+      const result = await service.vote('room-id', 'stage-id', 'card-id', 'user-id', 'UNLIKE');
+      expect(result).toBe(true);
     });
   });
 });
