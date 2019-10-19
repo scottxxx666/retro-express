@@ -1,4 +1,5 @@
 import uuid from '../../utils/uuid';
+import TimesLimitExceededError from '../../errors/times-limited-exceeded';
 
 export default class Service {
   constructor(cardRepo) {
@@ -27,7 +28,7 @@ export default class Service {
       return false;
     }
     if (await this._repo.countVote(roomId, stageId, userId) >= 3) {
-      return false;
+      throw new TimesLimitExceededError();
     }
     return await this._repo.like(roomId, stageId, cardId, userId);
   }
