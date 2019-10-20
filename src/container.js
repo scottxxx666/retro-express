@@ -14,7 +14,7 @@ export default function (req, res, next) {
   bottle.factory('userRepo', (container) => new UserRepository(container.docClient));
   bottle.factory('roomRepo', (container) => new RoomRepository(container.docClient));
   bottle.factory('cardRepo', (container) => new CardRepository(container.docClient));
-  bottle.service('jwtService', JwtService);
+  bottle.service('jwtService', () => JwtService);
   bottle.factory('userService', (container) => new UserService(container.userRepo, container.jwtService));
   bottle.factory('roomService', (container) => new RoomService(container.roomRepo));
   bottle.factory('cardService', (container) => new CardService(container.cardRepo));

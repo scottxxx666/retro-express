@@ -16,5 +16,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "no-underscore-dangle": "off",
+    "no-return-await": "off"
   }
 }

@@ -16,7 +16,7 @@ export default class Repository {
       },
     };
     const data = await this._client.get(params).promise();
-    return data.hasOwnProperty('Item') ? data.Item.userId : null;
+    return 'Item' in data ? data.Item.userId : null;
   }
 
   async create(platform, openId, id) {
