@@ -47,11 +47,10 @@ describe('create', () => {
       fakeRepo.countVote.mockReturnValue(3);
       await expect(service.vote('room-id', 'stage-id', 'card-id', 'user-id', 'LIKE'))
         .rejects.toStrictEqual(new TimesLimitExceededError());
-
     });
   });
 
-  describe('_unlike', () => {
+  describe('vote unlike', () => {
     test('Need room-id, stage-id, card-id, user-id to unlike card', async () => {
       fakeRepo.alreadyVote.mockReturnValue(true);
       await service.vote('room-id', 'stage-id', 'card-id', 'user-id', 'UNLIKE');
