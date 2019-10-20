@@ -2,8 +2,9 @@ import uuid from '../../utils/uuid';
 import TimesLimitExceededError from '../../errors/times-limited-exceeded';
 
 export default class Service {
-  constructor(cardRepo) {
+  constructor(cardRepo, likeRepo) {
     this._repo = cardRepo;
+    this._likeRepo = likeRepo;
   }
 
   async list(roomId, stageId) {
@@ -24,19 +25,19 @@ export default class Service {
   }
 
   async _like(roomId, stageId, cardId, userId) {
-    if (await this._repo.alreadyVote(roomId, stageId, cardId, userId)) {
+    if (await this._likeRepo.alreadyVote(roomId, stageId, cardId, userId)) {
       return false;
     }
-    if (await this._repo.countVote(roomId, stageId, userId) >= 3) {
+    if (await this._likeRepo.countVote(roomId, stageId, userId) >= 3) {
       throw new TimesLimitExceededError();
     }
-    return await this._repo.like(roomId, stageId, cardId, userId);
+    return await this._likeRepo.like(roomId, stageId, cardId, userId);
   }
 
   async _unlike(roomId, stageId, cardId, userId) {
-    if (!await this._repo.alreadyVote(roomId, stageId, cardId, userId)) {
+    if (!await this._likeRepo.alreadyVote(roomId, stageId, cardId, userId)) {
       return false;
     }
-    return await this._repo.unlike(roomId, stageId, cardId, userId);
+    return await this._likeRepo.unlike(roomId, stageId, cardId, userId);
   }
 }
