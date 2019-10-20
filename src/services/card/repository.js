@@ -1,9 +1,14 @@
 export default class Repository {
   _tableName = 'Retrospectives';
+
   _roomPrefix = 'Room_';
+
   _stagePrefix = 'Stage_';
+
   _cardPrefix = 'Card_';
+
   _userPrefix = 'User_';
+
   _likePostfix = 'Like';
 
   constructor(documentClient) {
@@ -17,7 +22,7 @@ export default class Repository {
       ExpressionAttributeValues: {
         ':roomId': this._roomPrefix + roomId,
         ':stageId': `${this._stagePrefix + stageId}#${this._cardPrefix}`,
-      }
+      },
     };
     return await this._client.query(params).promise();
   }
@@ -28,11 +33,11 @@ export default class Repository {
       Item: {
         pk: this._roomPrefix + roomId,
         sk: `${this._stagePrefix + stageId}#${this._cardPrefix}${id}`,
-        userId: userId,
-        content: content,
+        userId,
+        content,
         likes: 0,
         unlikes: 0,
-      }
+      },
     };
     await this._client.put(params).promise();
     return id;
@@ -50,51 +55,50 @@ export default class Repository {
             },
             UpdateExpression: 'set likes = likes + :val',
             ExpressionAttributeValues: {
-              ':val': 1
+              ':val': 1,
             },
-          }
+          },
         }, {
           Put: {
             TableName: this._tableName,
             Item: {
               pk: `${this._roomPrefix + roomId}#${this._stagePrefix}${stageId}#${this._userPrefix}${userId}#${this._likePostfix}`,
               sk: this._cardPrefix + cardId,
-            }
-          }
-        }
-      ]
+            },
+          },
+        },
+      ],
     };
     return await this._client.transactWrite(params).promise();
   }
 
   async unlike(roomId, stageId, cardId, userId) {
     const params = {
-        TransactItems: [
-          {
-            Update: {
-              TableName: this._tableName,
-              Key: {
-                pk: this._roomPrefix + roomId,
-                sk: `${this._stagePrefix + stageId}#${this._cardPrefix}${cardId}`,
-              },
-              UpdateExpression: 'set likes = likes + :val',
-              ExpressionAttributeValues: {
-                ':val': -1
-              },
-            }
-          }, {
-            Delete: {
-              TableName: this._tableName,
-              Key: {
-                pk: `${this._roomPrefix + roomId}#${this._stagePrefix}${stageId}#${this._userPrefix}${userId}#${this._likePostfix}`,
-                sk:
+      TransactItems: [
+        {
+          Update: {
+            TableName: this._tableName,
+            Key: {
+              pk: this._roomPrefix + roomId,
+              sk: `${this._stagePrefix + stageId}#${this._cardPrefix}${cardId}`,
+            },
+            UpdateExpression: 'set likes = likes + :val',
+            ExpressionAttributeValues: {
+              ':val': -1,
+            },
+          },
+        }, {
+          Delete: {
+            TableName: this._tableName,
+            Key: {
+              pk: `${this._roomPrefix + roomId}#${this._stagePrefix}${stageId}#${this._userPrefix}${userId}#${this._likePostfix}`,
+              sk:
                   this._cardPrefix + cardId,
-              }
-            }
-          }
-        ]
-      }
-    ;
+            },
+          },
+        },
+      ],
+    };
     return await this._client.transactWrite(params).promise();
   }
 
@@ -105,7 +109,7 @@ export default class Repository {
       ExpressionAttributeValues: {
         ':pk': `${this._roomPrefix + roomId}#${this._stagePrefix}${stageId}#${this._userPrefix}${userId}#${this._likePostfix}`,
         ':sk': this._cardPrefix + cardId,
-      }
+      },
     };
     const result = await this._client.query(params).promise();
     return result.Count >= 1;
@@ -118,7 +122,7 @@ export default class Repository {
       ExpressionAttributeValues: {
         ':pk': `${this._roomPrefix + roomId}#${this._stagePrefix}${stageId}#${this._userPrefix}${userId}#${this._likePostfix}`,
         ':skPrefix': this._cardPrefix,
-      }
+      },
     };
     return (await this._client.query(params).promise()).Count;
   }

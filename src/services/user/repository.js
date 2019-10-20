@@ -1,5 +1,6 @@
 export default class Repository {
   _tableName = 'Retrospectives';
+
   _pkPrefix = 'OpenId_';
 
   constructor(documentClient) {
@@ -10,9 +11,9 @@ export default class Repository {
     const params = {
       TableName: this._tableName,
       Key: {
-        'pk': this._pkPrefix + openId,
-        'sk': platform,
-      }
+        pk: this._pkPrefix + openId,
+        sk: platform,
+      },
     };
     const data = await this._client.get(params).promise();
     return data.hasOwnProperty('Item') ? data.Item.userId : null;
@@ -22,10 +23,10 @@ export default class Repository {
     const params = {
       TableName: this._tableName,
       Item: {
-        'pk': this._pkPrefix + openId,
-        'sk': platform,
-        'userId': id,
-      }
+        pk: this._pkPrefix + openId,
+        sk: platform,
+        userId: id,
+      },
     };
     await this._client.put(params).promise();
     return id;

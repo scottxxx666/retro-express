@@ -18,7 +18,7 @@ export default class Service {
   }
 
   async vote(roomId, stageId, cardId, userId, action) {
-    const map = { 'LIKE': '_like', 'UNLIKE': '_unlike' };
+    const map = { LIKE: '_like', UNLIKE: '_unlike' };
     await this[map[action]](roomId, stageId, cardId, userId);
     return true;
   }

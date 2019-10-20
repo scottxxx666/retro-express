@@ -1,6 +1,8 @@
 export default class Repository {
   _tableName = 'Retrospectives';
+
   _pkPrefix = 'Room_';
+
   _hostPrefix = 'Host_';
 
   constructor(documentClient) {
@@ -14,10 +16,10 @@ export default class Repository {
           TableName: this._tableName,
           Item: {
             pk: this._hostPrefix + userId,
-            sk: 'CreatedAt_' + new Date().toISOString(),
+            sk: `CreatedAt_${new Date().toISOString()}`,
             room: roomId,
-          }
-        }
+          },
+        },
       }, {
         Put: {
           TableName: this._tableName,
@@ -25,10 +27,10 @@ export default class Repository {
             pk: this._pkPrefix + roomId,
             sk: this._hostPrefix + userId,
             currentStage: 0,
-            stages: ['Went well', 'To Improve', 'Action Items']
-          }
-        }
-      }]
+            stages: ['Went well', 'To Improve', 'Action Items'],
+          },
+        },
+      }],
     };
     return await this._client.transactWrite(params).promise();
   }
@@ -36,11 +38,11 @@ export default class Repository {
   async find(roomId) {
     const params = {
       TableName: this._tableName,
-      KeyConditionExpression: `pk = :roomId and begins_with(sk, :hostPrefix)`,
+      KeyConditionExpression: 'pk = :roomId and begins_with(sk, :hostPrefix)',
       ExpressionAttributeValues: {
         ':roomId': this._pkPrefix + roomId,
-        ':hostPrefix': this._hostPrefix
-      }
+        ':hostPrefix': this._hostPrefix,
+      },
     };
     const { stages, currentStage } = await this._client.find(params);
     return { stages, currentStage };
