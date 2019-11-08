@@ -7,10 +7,10 @@ export default class Service {
   }
 
   async login(platform, openId) {
-    let id = await this.repo.getId(platform, openId);
-    if (id === null) {
-      id = await this.repo.create(platform, openId, uuid());
+    let user = await this.repo.find(platform, openId);
+    if (user === null) {
+      user = await this.repo.create(platform, openId, uuid());
     }
-    return this.jwt.sign({ id });
+    return this.jwt.sign({ id: user.id });
   }
 }
