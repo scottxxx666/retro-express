@@ -12,7 +12,7 @@ import docClient from './utils/client';
 export default function (req, res, next) {
   const bottle = new Bottle();
   bottle.service('docClient', docClient);
-  bottle.factory('userRepo', (container) => new UserRepository(container.docClient));
+  bottle.factory('userRepo', () => new UserRepository());
   bottle.factory('roomRepo', (container) => new RoomRepository(container.docClient));
   bottle.factory('cardRepo', (container) => new CardRepository(container.docClient));
   bottle.factory('likeRepo', (container) => new LikeRepository(container.docClient));

@@ -4,6 +4,7 @@ import routes from './routes';
 import container from './container';
 import auth from './middlewares/auth';
 import errorHandler from './errors/handler';
+import db from './db';
 
 const app = express();
 const port = 3000;
